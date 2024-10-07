@@ -41,6 +41,17 @@ jobs:
       id-token: write
 
     steps:
+      - name: Run Trivy vulnerability scanner
+        id: trivy-scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: pyengine/${{ github.event.repository.name }}:${{ env.VERSION }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          
       - name: Checkout repository
         uses: actions/checkout@v3
 
